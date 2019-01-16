@@ -1,0 +1,3 @@
+[submodule "QMC/xyz2mol"]
+	path = QMC/xyz2mol
+	url = https://github.com/jensengroup/xyz2mol.git
