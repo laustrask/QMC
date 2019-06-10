@@ -12,8 +12,8 @@ class Gaussian(Calculator):
     """Gaussian calculator """
 
     implemented_properties = ['energy', 'freqencies']
-    program_path = "/opt/gaussian/g16"
-    #program_path = "/opt/gaussian/g09"
+    #program_path = "/opt/gaussian/g16"
+    program_path = "/opt/gaussian/g09"
     
     default_parameters = {'method': 'pm3',
                           'basis': ''}
@@ -68,12 +68,13 @@ class Gaussian(Calculator):
         
         # set enviroment.
         os.environ['GAUSS_SCRDIR'] = os.path.abspath(self.calc_dir)
-        #os.environ['GAUSS_EXEDIR'] = self.program_path # needed for g09.
+        os.environ['GAUSS_EXEDIR'] = self.program_path # needed for g09.
         
         # Run calculation.
         self.write_input() # write input
 
-        command = self.program_path + "/g16 " + self.label + '.com'
+        #command = self.program_path + "/g16 " + self.label + '.com'
+        command = self.program_path + "/g09 < " + self.label + '.com'
         
         os.chdir(self.calc_dir) # move to working dir
         output = os.popen(command).read() # run calculation

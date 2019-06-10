@@ -58,9 +58,7 @@ class QMConf:
             self.number2symbols()
 
         self._calc = None
-
         self.rdkit_mol = None
-
         self.label = label
 
 
@@ -143,6 +141,7 @@ class QMConf:
         self.results = results
         
         return self
+
 
     def write_xyz(self, to_file=True):
         """Write xyz string/file of qmconf"""

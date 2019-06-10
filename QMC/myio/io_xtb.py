@@ -22,6 +22,9 @@ def read_xtb_out(content, quantity='energy'):
 
     elif quantity == 'converged':
         return read_converged(content)
+    
+    elif quantity == 'HOF':
+        return read_hof(content)
 
 
 def read_converged(content):
@@ -39,6 +42,15 @@ def read_energy(content):
 
     return energy
 
+
+def read_hof(content):
+    """Read total electronic energy """
+
+    for line in content.split('\n'):
+        if 'HOF' in line:
+            hof = float(line.strip().split()[0])
+
+    return hof
 
 def read_structure(content):
     """Read structure from output file """

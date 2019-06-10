@@ -94,7 +94,7 @@ class QMMol:
 
         if 'structure' not in quantities:
             quantities.append('structure')
-
+        
         self.calculate(num_procs, keep_files, quantities)
         
 
@@ -116,12 +116,16 @@ class QMMol:
         """Create rdkit mol, with qmconf conformers as RDKit conformers."""
 
         for idx, conf in enumerate(self.conformers):
-
-            if idx == 0:
-                rdkit_mol = conf.get_rdkit_mol(charged_fragments)
-            else:
-                rdkit_conf = conf.get_rdkit_mol(charged_fragments).GetConformer()
-                rdkit_mol.AddConformer(rdkit_conf, assignId=True)
+            
+            try:
+                if idx == 0:
+                    rdkit_mol = conf.get_rdkit_mol(charged_fragments)
+                else:
+                    rdkit_conf = conf.get_rdkit_mol(charged_fragments).GetConformer()
+                    rdkit_mol.AddConformer(rdkit_conf, assignId=True)
+            except:
+                sys.stderr.write("can't create RDKit conf")
+                continue
 
         self.rdkit_mol = rdkit_mol
 
@@ -140,7 +144,7 @@ class QMMol:
             self.remove_conformers()
 
         for idx, new_conf in enumerate(rdkit.GetConformers()):
-            conf_name = label +'-{}'.format(idx)
+            conf_name = str(label) +'-{}'.format(idx)
 
             self.add_conformer(input_mol=new_conf, fmt='rdkit', label=conf_name,
                                charge=self.charge, multiplicity=self.multiplicity,

@@ -52,7 +52,7 @@ class xTB(Calculator):
 
         os.environ['OMP_NUM_THREADS'] = str(cpus)
         os.environ['MKL_NUM_THREADS'] = str(cpus)
-
+        
         # Create xTB command. Set method (gfn, gfn2, gfn2d3, etc.)
         route = ' -{} '.format(self.parameters['method'])
 
@@ -62,6 +62,10 @@ class xTB(Calculator):
 
         if self.qmconf.charge != 0:
             route += '-chrg {} '.format(self.qmconf.charge)
+        
+        # remove opt if ohess in self.parameters
+        if 'ohess' in self.parameters.keys() and 'opt' in self.parameters.keys():
+            del self.parameters['opt']
 
         # Set calculation type and solvent.
         for key, val in self.parameters.items():
@@ -73,7 +77,6 @@ class xTB(Calculator):
                 else:
                     route += '-{} {}'.format(key,val)
         
-        print(route)
         cmd = '{}/xtb {} {}'.format(self.program_path, self.label + '.xyz',  route)
 
         return cmd
