@@ -47,5 +47,5 @@ def read_atomic_numbers(content):
     atomic_numbers = list()
     for atom in atomic_symbols:
         atomic_numbers.append(x2m.get_atom(atom))
-
+    
     return atomic_numbers

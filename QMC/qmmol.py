@@ -1,3 +1,4 @@
+import sys
 import multiprocessing as mp
 import copy
 
@@ -114,7 +115,7 @@ class QMMol:
 
     def get_rdkit_mol(self, charged_fragments=True):
         """Create rdkit mol, with qmconf conformers as RDKit conformers."""
-
+        
         for idx, conf in enumerate(self.conformers):
             
             try:
@@ -213,15 +214,15 @@ class QMMol:
         
         energy_list = list()
         for conf in self.conformers:
-            energy_list.append( conf.results['energy'])
-
+            energy_list.append(conf.results['energy'])
+        
         sorted_energy_list = sorted(energy_list)
         
         nlowest_confs = list()
         for val in sorted_energy_list[:n]:
             conf_idx = energy_list.index(val)
             nlowest_confs.append(self.conformers[conf_idx])
-        
+         
         return nlowest_confs
 
 

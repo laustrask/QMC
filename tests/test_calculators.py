@@ -1,7 +1,7 @@
 import sys
 import os
 
-sys.path.append('/home/koerstz/git/tQMC/QMC')
+sys.path.append('/groups/kemi/ree/opt/tQMC/QMC')
 from qmconf import QMConf
 
 import numpy as np
@@ -122,7 +122,7 @@ def test_xtb():
 
 if __name__ == '__main__':
     test_gaussian()
-    test_orca()
-    test_dftb()
+    #test_orca()
+    #test_dftb()
     test_xtb()
     

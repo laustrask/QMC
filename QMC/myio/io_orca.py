@@ -1,4 +1,4 @@
-import xyz2mol.xyz2mol as x2m
+#import xyz2mol.xyz2mol as x2m
 
 def read_orca_out(content, quantity='energy'):
     """Reads ORCA output
@@ -183,5 +183,5 @@ if __name__ == '__main__':
 
     with open(sys.argv[1], 'r') as f:
         output = f.read()
-
-    print(read_orca_out(output, quantity='converged'))
+    
+    print(f"{sys.argv[1].split('_')[0]},{read_orca_out(output, quantity='ts_guess_energy')}")

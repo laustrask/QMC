@@ -13,7 +13,7 @@ class Gaussian(Calculator):
 
     implemented_properties = ['energy', 'freqencies']
     #program_path = "/opt/gaussian/g16"
-    program_path = "/opt/gaussian/g09"
+    program_path = "/software/kemi/g09E/g09"
     
     default_parameters = {'method': 'pm3',
                           'basis': ''}

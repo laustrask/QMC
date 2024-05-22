@@ -3,7 +3,7 @@ import os
 
 import numpy as np
 
-sys.path.append('/home/koerstz/git/tQMC/QMC')
+sys.path.append('/groups/kemi/ree/opt/tQMC/QMC')
 from qmmol import QMMol
 
 

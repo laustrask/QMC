@@ -1,5 +1,6 @@
 import os
 import copy
+from rdkit import Chem
 
 import xyz2mol.xyz2mol as x2m
 
@@ -90,10 +91,10 @@ class QMConf:
         """Return RDKit object. Uses xyz2mol."""
 
         quick = True # only option that works.
-
+        
         rdkit_mol = x2m.xyz2mol(self.atomic_numbers, self.charge,
                                 self.structure, charged_fragments, quick)
-
+        
         self.rdkit_mol = rdkit_mol
 
         return rdkit_mol

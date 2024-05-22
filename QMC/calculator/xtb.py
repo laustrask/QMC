@@ -1,14 +1,17 @@
 import os
 from calculator.calculator import Calculator
 
-calc_type = ['opt', 'ohess', 'hess', 'grad']
+
+route_keys = ['sp', 'opt', 'ohess', 'grad', 'gbsa', 'input']
+
 
 class xTB(Calculator):
     """ xTB calculator """
 
     implemented_properties = ['energy']
 
-    program_path = '/opt/xtb/5.8.1'
+    program_home = '/Users/oscarobel/Documents/GitHub/xtb'
+    program_path = '/usr/local/bin'
 
     default_parameters = {'method': 'gfn2',
                           'opt': 'opt',
@@ -43,7 +46,8 @@ class xTB(Calculator):
         """Prepare command to run xTB, and set enviroment """
 
         # set xTB enviroment
-        os.environ['XTBHOME'] = self.program_path
+        os.environ['XTBHOME'] = self.program_home
+        os.environ['XTBPATH'] = self.program_path
 
         if 'cpus' not in self.parameters.keys():
             cpus = 1
@@ -52,31 +56,28 @@ class xTB(Calculator):
 
         os.environ['OMP_NUM_THREADS'] = str(cpus)
         os.environ['MKL_NUM_THREADS'] = str(cpus)
-        
+
         # Create xTB command. Set method (gfn, gfn2, gfn2d3, etc.)
-        route = ' -{} '.format(self.parameters['method'])
+        route = ' --{} '.format(self.parameters['method'])
 
         # Run uhf if not singlet.
         if self.qmconf.multiplicity != 1:
-            route += '-uhf {} '.format(self.qmconf.multiplicity - 1)
-
-        if self.qmconf.charge != 0:
-            route += '-chrg {} '.format(self.qmconf.charge)
-        
-        # remove opt if ohess in self.parameters
-        if 'ohess' in self.parameters.keys() and 'opt' in self.parameters.keys():
-            del self.parameters['opt']
+            route += '--uhf {} '.format(self.qmconf.multiplicity - 1)
 
         # Set calculation type and solvent.
         for key, val in self.parameters.items():
             key, val = str(key), str(val)
 
-            if key.lower() in calc_type:
+            if key.lower() in route_keys:
                 if (val.lower() == key.lower()):
-                    route += '-{} '.format(val)
+
+                    route += '--{} '.format(val)
+
                 else:
-                    route += '-{} {}'.format(key,val)
-        
+                    route += '--{} {}'.format(key,val)
+
+
+        #cmd = '{}/xtb_old_kernel {} {}'.format(self.program_path, self.label + '.xyz',  route)
         cmd = '{}/xtb {} {}'.format(self.program_path, self.label + '.xyz',  route)
 
         return cmd
@@ -89,11 +90,11 @@ class xTB(Calculator):
         self.write_input() # write input file
 
         command = self.input_cmd() # command to run xTB
-        
+
         os.chdir(self.calc_dir) # move into working dir.
         output = os.popen(command).read() # run calculation.
         os.chdir('..') # get out of working dir.
-        
+
         # extract results from quantities.
         results = Calculator.read_results(self, self.qmconf, output, quantities)
 
@@ -111,12 +112,17 @@ class xTB(Calculator):
 
         if keep_files:
             os.rename(self.calc_dir+'/'+self.prefix + '.xyz', self.label + '.xyz')
+        
+            if os.path.isfile(self.calc_dir+'/'+'xtbscan.log'):
+                os.rename(self.calc_dir+'/'+'xtbscan.log', self.label + '_xtbscan.log')
 
         for f in os.listdir(self.calc_dir):
             f = self.calc_dir+'/'+f
 
             if os.path.isfile(f):
                 os.remove(f)
+        
+#        os.remove(str(self.label.split('_ts')[0]) + "_xcontrol") #Uncomment if TS SCAN but comment when storage
 
         os.rmdir(self.calc_dir)
 
